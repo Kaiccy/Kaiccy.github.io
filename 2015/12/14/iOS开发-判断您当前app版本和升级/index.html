@@ -3,18 +3,27 @@
 <head>
   <meta charset="utf-8">
   
-  <title>search | 王雪</title>
+  <title>iOS开发 判断您当前app版本和升级 | 王雪</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description">
-<meta property="og:type" content="website">
-<meta property="og:title" content="search">
-<meta property="og:url" content="http://yoursite.com/search/index.html">
+  <meta name="description" content="首先我们可以根据info.plist文件中的bundle version中获取
+NSDictionary *infoDic = [NSBundle mainBundle] infoDictionary];
+NSSting *currentVersion = [infoDic objectForKey:@&amp;quot;CFBundleShortVersionString&amp;quot;];
+其次,请求AP">
+<meta property="og:type" content="article">
+<meta property="og:title" content="iOS开发 判断您当前app版本和升级">
+<meta property="og:url" content="http://yoursite.com/2015/12/14/iOS开发-判断您当前app版本和升级/index.html">
 <meta property="og:site_name" content="王雪">
-<meta property="og:description">
-<meta property="og:updated_time" content="2015-12-10T14:09:35.000Z">
+<meta property="og:description" content="首先我们可以根据info.plist文件中的bundle version中获取
+NSDictionary *infoDic = [NSBundle mainBundle] infoDictionary];
+NSSting *currentVersion = [infoDic objectForKey:@&amp;quot;CFBundleShortVersionString&amp;quot;];
+其次,请求AP">
+<meta property="og:updated_time" content="2015-12-14T10:46:18.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="search">
-<meta name="twitter:description">
+<meta name="twitter:title" content="iOS开发 判断您当前app版本和升级">
+<meta name="twitter:description" content="首先我们可以根据info.plist文件中的bundle version中获取
+NSDictionary *infoDic = [NSBundle mainBundle] infoDictionary];
+NSSting *currentVersion = [infoDic objectForKey:@&amp;quot;CFBundleShortVersionString&amp;quot;];
+其次,请求AP">
   
     <link rel="alternative" href="/atom.xml" title="王雪" type="application/atom+xml">
   
@@ -198,11 +207,11 @@
 		</header>				
 	</div>
 </nav>
-      <div class="body-wrap"><article id="search-undefined" class="article article-type-search" itemscope itemprop="blogPost">
+      <div class="body-wrap"><article id="post-iOS开发-判断您当前app版本和升级" class="article article-type-post" itemscope itemprop="blogPost">
   
     <div class="article-meta">
-      <a href="/search/index.html" class="article-date">
-  	<time datetime="2015-11-28T03:35:45.000Z" itemprop="datePublished">2015-11-28</time>
+      <a href="/2015/12/14/iOS开发-判断您当前app版本和升级/" class="article-date">
+  	<time datetime="2015-12-14T10:34:00.000Z" itemprop="datePublished">2015-12-14</time>
 </a>
     </div>
   
@@ -215,7 +224,7 @@
         
   
     <h1 class="article-title" itemprop="name">
-      search
+      iOS开发 判断您当前app版本和升级
     </h1>
   
 
@@ -223,7 +232,15 @@
       
       <div class="article-info article-info-post">
         
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/app更新/">app更新</a></li></ul>
+	</div>
+
         
+	<div class="article-category tagcloud">
+	<a class="article-category-link" href="/categories/iOS/">iOS</a>
+	</div>
+
 
         <div class="clearfix"></div>
       </div>
@@ -231,13 +248,64 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        
+        <p>首先我们可以根据info.plist文件中的bundle version中获取</p>
+<p><code>NSDictionary *infoDic = [NSBundle mainBundle] infoDictionary];
+NSSting *currentVersion = [infoDic objectForKey:@&quot;CFBundleShortVersionString&quot;];</code></p>
+<p>其次,请求APP的相关数据<br><a href="https://itunes.apple.com/lookup?id=XXX(其中XXX是你的app的商店ID),你过去到的数据是json数据" target="_blank" rel="external">https://itunes.apple.com/lookup?id=XXX(其中XXX是你的app的商店ID),你过去到的数据是json数据</a><br>进行接卸,将version的数据根你从info.plist获取的数据进行比较!</p>
+<p><code>fileSizeBytes: &quot;XXXXXXX&quot;
+sellerUrl: &quot;http://cineplx.sscac.com.cn/&quot;
+taeckCensoredName             //审查名称
+trackContentRating: &quot;12+&quot;    //评级
+currency: &quot;USD&quot;                
+wrapperType: &quot;software&quot;
+version: &quot;1.0.0&quot;                //版本
+artistID: XXX
+artistName: XXX</code></p>
+<p>代码</p>
+<p><code>-(void)judgeAPPVersion
+{
+//  http://itunes.apple.com/lookup?id=XXX
+   NSString *urlStr = @&quot;https//itunes.apple.com/lookup?id=xxx&quot;;
+   NSURL *url = [NSURL URLWithString:urlStr];
+   NSURLRequest *req = [NSURLRequest requestWithURL:url];
+  [NSURLConnection connectionWithRequset:req delegate:self];
+}</code></p>
+<p><code>-(void)connection:(NSURLConnection *)connection didReceiveData:(NSData *)data{
+NSError *error;
+id jsonObject = [NSJSONSeralization JSONObjectWithData:data options:    NSJSONReadingAllowFragments error:&amp;error];
+NSDictionary *appInfo =(NSDictionary *)jsonObject;
+ NSArray *onfoContent =[appInfo objectForKey:@&quot;results&quot;];
+  NSString *version = [[infoContent objectAtIndex:0]objectForKey:@&quot;version&quot;];
+  NSLog(@&quot;商店的版本是 %@&quot;,version);
+  NSDictionary *infoDic = [[NSBundle mainBundle]infoDictionary];
+  NSString *currentVersion =[infoDic objectForKey:@&quot;CFBundleShortVersionSring&quot;];
+  NSLog(@&quot;当前版本是%@&quot;,currentVersion);
+}</code></p>
+<p><code>if(![version isEqualToString:currentVersion])
+  {
+  UIAlertView *alert = [UIAlertView alloc]initWithTitle:nil message:@&quot;商店有新的版本了&quot; delegate:nil cancelButtonTitle:@&quot;YES&quot; otherButtonTitles:nil];
+[alert show];
+}
+}</code></p>
+<p>跳转到商店更新app的接口的按钮</p>
+<p><code>[UIApplication sharedApplication] openURL:[NSURL URLWithString:trackViewUrl]];</code></p>
+
       
     </div>
     
   </div>
   
     
+<nav id="article-nav">
+  
+  
+    <a href="/2015/12/13/转-ios-开发：用-instruments-来检验你的app/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">[转]ios_开发：用_instruments_来检验你的app</div>
+      <strong class="article-nav-caption">></strong>
+    </a>
+  
+</nav>
+
   
 </article>
 
@@ -261,7 +329,7 @@
 
 <div class="duoshuo">
 	<!-- 多说评论框 start -->
-	<div class="ds-thread" data-thread-key="undefined" data-title="search" data-url="http://yoursite.com/search/index.html"></div>
+	<div class="ds-thread" data-thread-key="iOS开发-判断您当前app版本和升级" data-title="iOS开发 判断您当前app版本和升级" data-url="http://yoursite.com/2015/12/14/iOS开发-判断您当前app版本和升级/"></div>
 	<!-- 多说评论框 end -->
 	<!-- 多说公共JS代码 start (一个网页只需插入一次) -->
 	<script type="text/javascript">
@@ -316,7 +384,7 @@
 		mathjax: true,
 		animate: true,
 		isHome: false,
-		isPost: false,
+		isPost: true,
 		isArchive: false,
 		isTag: false,
 		isCategory: false,

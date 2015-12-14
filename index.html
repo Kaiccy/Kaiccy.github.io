@@ -124,7 +124,7 @@
 				
 				<section class="switch-part switch-part2">
 					<div class="widget tagcloud" id="js-tagcloud">
-						<a href="/tags/3DTouch/" style="font-size: 10px;">3DTouch</a> <a href="/tags/iOS-OC/" style="font-size: 10px;">iOS-OC</a> <a href="/tags/tableview/" style="font-size: 10px;">tableview</a> <a href="/tags/调试检测/" style="font-size: 10px;">调试检测</a>
+						<a href="/tags/3DTouch/" style="font-size: 10px;">3DTouch</a> <a href="/tags/app更新/" style="font-size: 10px;">app更新</a> <a href="/tags/iOS-OC/" style="font-size: 10px;">iOS-OC</a> <a href="/tags/tableview/" style="font-size: 10px;">tableview</a> <a href="/tags/调试检测/" style="font-size: 10px;">调试检测</a>
 					</div>
 				</section>
 				
@@ -198,6 +198,105 @@
 	</div>
 </nav>
       <div class="body-wrap">
+  
+    <article id="post-iOS开发-判断您当前app版本和升级" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2015/12/14/iOS开发-判断您当前app版本和升级/" class="article-date">
+  	<time datetime="2015-12-14T10:34:00.000Z" itemprop="datePublished">2015-12-14</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2015/12/14/iOS开发-判断您当前app版本和升级/">iOS开发 判断您当前app版本和升级</a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>首先我们可以根据info.plist文件中的bundle version中获取</p>
+<p><code>NSDictionary *infoDic = [NSBundle mainBundle] infoDictionary];
+NSSting *currentVersion = [infoDic objectForKey:@&quot;CFBundleShortVersionString&quot;];</code></p>
+<p>其次,请求APP的相关数据<br><a href="https://itunes.apple.com/lookup?id=XXX(其中XXX是你的app的商店ID),你过去到的数据是json数据" target="_blank" rel="external">https://itunes.apple.com/lookup?id=XXX(其中XXX是你的app的商店ID),你过去到的数据是json数据</a><br>进行接卸,将version的数据根你从info.plist获取的数据进行比较!</p>
+<p><code>fileSizeBytes: &quot;XXXXXXX&quot;
+sellerUrl: &quot;http://cineplx.sscac.com.cn/&quot;
+taeckCensoredName             //审查名称
+trackContentRating: &quot;12+&quot;    //评级
+currency: &quot;USD&quot;                
+wrapperType: &quot;software&quot;
+version: &quot;1.0.0&quot;                //版本
+artistID: XXX
+artistName: XXX</code></p>
+<p>代码</p>
+<p><code>-(void)judgeAPPVersion
+{
+//  http://itunes.apple.com/lookup?id=XXX
+   NSString *urlStr = @&quot;https//itunes.apple.com/lookup?id=xxx&quot;;
+   NSURL *url = [NSURL URLWithString:urlStr];
+   NSURLRequest *req = [NSURLRequest requestWithURL:url];
+  [NSURLConnection connectionWithRequset:req delegate:self];
+}</code></p>
+<p><code>-(void)connection:(NSURLConnection *)connection didReceiveData:(NSData *)data{
+NSError *error;
+id jsonObject = [NSJSONSeralization JSONObjectWithData:data options:    NSJSONReadingAllowFragments error:&amp;error];
+NSDictionary *appInfo =(NSDictionary *)jsonObject;
+ NSArray *onfoContent =[appInfo objectForKey:@&quot;results&quot;];
+  NSString *version = [[infoContent objectAtIndex:0]objectForKey:@&quot;version&quot;];
+  NSLog(@&quot;商店的版本是 %@&quot;,version);
+  NSDictionary *infoDic = [[NSBundle mainBundle]infoDictionary];
+  NSString *currentVersion =[infoDic objectForKey:@&quot;CFBundleShortVersionSring&quot;];
+  NSLog(@&quot;当前版本是%@&quot;,currentVersion);
+}</code></p>
+<p><code>if(![version isEqualToString:currentVersion])
+  {
+  UIAlertView *alert = [UIAlertView alloc]initWithTitle:nil message:@&quot;商店有新的版本了&quot; delegate:nil cancelButtonTitle:@&quot;YES&quot; otherButtonTitles:nil];
+[alert show];
+}
+}</code></p>
+<p>跳转到商店更新app的接口的按钮</p>
+<p><code>[UIApplication sharedApplication] openURL:[NSURL URLWithString:trackViewUrl]];</code></p>
+
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/app更新/">app更新</a></li></ul>
+	</div>
+
+      
+	<div class="article-category tagcloud">
+	<a class="article-category-link" href="/categories/iOS/">iOS</a>
+	</div>
+
+
+      
+      <div class="clearfix"></div>
+    </div>
+    
+  </div>
+  
+</article>
+
+
+
+
+
+
+
   
     <article id="post-转-ios-开发：用-instruments-来检验你的app" class="article article-type-post" itemscope itemprop="blogPost">
   
@@ -693,64 +792,6 @@
       
         <p class="article-more-link">
           <a  href="/2015/04/28/数据持久化的几种方式/#more">more >></a>
-        </p>
-      
-      <div class="clearfix"></div>
-    </div>
-    
-  </div>
-  
-</article>
-
-
-
-
-
-
-
-  
-    <article id="post-iOS编程细节整理" class="article article-type-post" itemscope itemprop="blogPost">
-  
-    <div class="article-meta">
-      <a href="/2015/04/28/iOS编程细节整理/" class="article-date">
-  	<time datetime="2015-04-28T03:07:47.000Z" itemprop="datePublished">2015-04-28</time>
-</a>
-    </div>
-  
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy" />
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2015/04/28/iOS编程细节整理/">iOS编程细节整理</a>
-    </h1>
-  
-
-      </header>
-      
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h4 id="关于iOS开发中遇到的一些小问题及其解决方法">关于iOS开发中遇到的一些小问题及其解决方法</h4>
-      
-    </div>
-    
-    <div class="article-info article-info-index">
-      
-      
-      
-	<div class="article-category tagcloud">
-	<a class="article-category-link" href="/categories/iOS/">iOS</a>
-	</div>
-
-
-      
-        <p class="article-more-link">
-          <a  href="/2015/04/28/iOS编程细节整理/#more">more >></a>
         </p>
       
       <div class="clearfix"></div>
